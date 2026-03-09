@@ -10,6 +10,7 @@ export async function POST(request: Request) {
         password,
         options: {
             data: { nombre: nombre || email.split('@')[0] },
+            emailRedirectTo: `${request.headers.get('origin')}/auth/callback`,
         },
     })
 
