@@ -326,7 +326,7 @@ sistema-financiero-app/
 User: "Gasté $200 en gasolina"
 AI: [Thinking...] → [Writing...]
     "¡Perfecto! Registré tu gasto:
-    💰 Monto: $200 MXN
+    💰 Monto: $200 COP
     📁 Categoría: Transporte
     💳 Método: Efectivo
 

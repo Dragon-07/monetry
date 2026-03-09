@@ -34,7 +34,7 @@ interface Transaccion {
 }
 
 const fmt = (v: number) =>
-    new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(v)
+    new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(v)
 
 const fmtK = (v: number) => {
     const abs = Math.abs(v)
@@ -53,7 +53,7 @@ export function FlujoEfectivo({ transacciones }: { transacciones: Transaccion[] 
         const agrupado = filtradas.reduce((acc, t) => {
             const date = new Date(t.fecha)
             const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
-            const label = date.toLocaleString('es-MX', { month: 'short', year: 'numeric' })
+            const label = date.toLocaleString('es-CO', { month: 'short', year: 'numeric' })
 
             if (!acc[key]) acc[key] = { label, ingresos: 0, gastos: 0, ms: date.getTime() }
 

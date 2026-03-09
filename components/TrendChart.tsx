@@ -113,7 +113,7 @@ export function TrendChart({ vista = 'mensual', fechaInicio, fechaFin, refreshTr
       // Convertir a arrays para Chart.js
       const sortedDates = Object.keys(groupedByDate).sort()
       const labels = sortedDates.map(fecha =>
-        new Date(fecha).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })
+        new Date(fecha).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })
       )
       const ingresos = sortedDates.map(fecha => groupedByDate[fecha].ingresos)
       const gastos = sortedDates.map(fecha => groupedByDate[fecha].gastos)
@@ -188,7 +188,7 @@ export function TrendChart({ vista = 'mensual', fechaInicio, fechaFin, refreshTr
               font: {
                 size: isMobile ? 10 : 11,
               },
-              callback: (value) => `$${Number(value).toLocaleString('es-MX', { maximumFractionDigits: 0 })}`,
+              callback: (value) => `$${Number(value).toLocaleString('es-CO', { maximumFractionDigits: 0 })}`,
             },
           },
           x: {

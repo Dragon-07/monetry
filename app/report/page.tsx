@@ -78,11 +78,11 @@ export default function ReportPage() {
               <div className="bg-emerald-50 dark:bg-emerald-900/30 rounded-lg p-4 border-l-4 border-emerald-500">
                 <p className="text-gray-800 dark:text-gray-200 mb-2">✅ Gasto registrado</p>
                 <p className="text-sm text-gray-700 dark:text-gray-300">
-                  💰 Monto: $500 MXN<br/>
+                  💰 Monto: $500 COP<br/>
                   📁 Categoría: Gasolina<br/>
                   📝 Descripción: Llenado camioneta<br/>
                   <br/>
-                  <strong>Balance del día: $8,600 MXN</strong>
+                  <strong>Balance del día: $8,600 COP</strong>
                 </p>
               </div>
             </div>
@@ -100,12 +100,12 @@ export default function ReportPage() {
               <div className="bg-emerald-50 dark:bg-emerald-900/30 rounded-lg p-4 border-l-4 border-emerald-500">
                 <p className="text-gray-800 dark:text-gray-200 mb-2">✅ Ingreso registrado</p>
                 <p className="text-sm text-gray-700 dark:text-gray-300">
-                  💵 Monto: $8,500 MXN<br/>
+                  💵 Monto: $8,500 COP<br/>
                   🏖️ Categoría: Tours<br/>
                   👥 Personas: 10<br/>
                   💳 Método: Tarjeta<br/>
                   <br/>
-                  <strong>Balance del día: $17,100 MXN</strong>
+                  <strong>Balance del día: $17,100 COP</strong>
                 </p>
               </div>
             </div>
@@ -122,12 +122,12 @@ export default function ReportPage() {
               </div>
               <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 border-l-4 border-blue-500">
                 <p className="text-gray-800 dark:text-gray-200 text-sm">
-                  Hoy has gastado $2,150 MXN:<br/>
+                  Hoy has gastado $2,150 COP:<br/>
                   • ⛽ Gasolina: $500<br/>
                   • 🛒 Compras: $1,200<br/>
                   • 💰 Comisiones: $450<br/>
                   <br/>
-                  Tu balance del día es <strong>$6,350 MXN</strong> ✅
+                  Tu balance del día es <strong>$6,350 COP</strong> ✅
                 </p>
               </div>
             </div>
@@ -186,20 +186,20 @@ graph LR
           <div className="bg-gray-900 text-green-400 rounded-xl p-6 font-mono text-sm overflow-x-auto">
             <pre>{`📊 REPORTE DIARIO - 5 de Octubre 2025
 
-💵 INGRESOS: $12,500 MXN
+💵 INGRESOS: $12,500 COP
    🏖️ Tours: $10,500 (13 clientes)
    🍽️ Comedor: $2,000
 
-💸 GASTOS: $3,400 MXN
+💸 GASTOS: $3,400 COP
    ⛽ Gasolina: $500
    🛒 Compras: $1,200
    💰 Comisiones: $1,700
 
-💰 BALANCE NETO: $9,100 MXN ✅
+💰 BALANCE NETO: $9,100 COP ✅
 
 📈 ESTADÍSTICAS:
    👥 13 clientes
-   💵 Promedio por cliente: $808 MXN
+   💵 Promedio por cliente: $808 COP
    💳 Efectivo: $2,100 (17%)
    🏦 Tarjeta: $10,400 (83%)
 

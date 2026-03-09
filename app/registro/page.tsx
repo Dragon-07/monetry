@@ -131,7 +131,7 @@ export default function RegistroPage() {
         {/* Monto */}
         <div>
           <label htmlFor="monto" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Monto (MXN) *
+            Monto (COP) *
           </label>
           <input
             type="number"

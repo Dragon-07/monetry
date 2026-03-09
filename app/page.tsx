@@ -95,8 +95,8 @@ export default function HomePage() {
 
     // Guardar rango de fechas para mostrar
     setRangoFechas({
-      inicio: startDate.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }),
-      fin: endDate.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
+      inicio: startDate.toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' }),
+      fin: endDate.toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' })
     })
 
     // Consultar transacciones en lugar de resumen_diario

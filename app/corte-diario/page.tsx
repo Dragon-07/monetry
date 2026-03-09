@@ -79,7 +79,7 @@ export default function CorteDiarioPage() {
 
       setMensaje({
         tipo: 'success',
-        texto: `✅ Corte registrado: ${ingresosValidos.length} categorías, $${calcularTotal().toLocaleString('es-MX', { maximumFractionDigits: 0 })} MXN total`
+        texto: `✅ Corte registrado: ${ingresosValidos.length} categorías, $${calcularTotal().toLocaleString('es-CO', { maximumFractionDigits: 0 })} COP total`
       })
 
       // Resetear formulario
@@ -117,7 +117,7 @@ export default function CorteDiarioPage() {
           <div className="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-gradient-to-br from-white/20 to-transparent blur-2xl" />
           <p className="text-sm font-semibold opacity-90 text-emerald-700 dark:text-emerald-400 mb-2">TOTAL DEL DÍA</p>
           <p className="text-4xl font-bold text-emerald-700 dark:text-emerald-400">
-            ${calcularTotal().toLocaleString('es-MX', { maximumFractionDigits: 0 })}
+            ${calcularTotal().toLocaleString('es-CO', { maximumFractionDigits: 0 })}
           </p>
         </div>
 

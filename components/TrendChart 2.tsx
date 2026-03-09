@@ -51,7 +51,7 @@ export function TrendChart({ vista = 'mensual', fechaInicio, fechaFin }: TrendCh
       .order('fecha', { ascending: true })
 
     if (data) {
-      const labels = data.map(row => new Date(row.fecha).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }))
+      const labels = data.map(row => new Date(row.fecha).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' }))
       const ingresos = data.map(row => parseFloat(row.total_ingresos || 0))
       const gastos = data.map(row => parseFloat(row.total_gastos || 0))
 
@@ -104,7 +104,7 @@ export function TrendChart({ vista = 'mensual', fechaInicio, fechaFin }: TrendCh
               font: {
                 size: window.innerWidth < 640 ? 10 : 11,
               },
-              callback: (value) => `$${value.toLocaleString('es-MX')}`,
+              callback: (value) => `$${value.toLocaleString('es-CO')}`,
             },
           },
           x: {

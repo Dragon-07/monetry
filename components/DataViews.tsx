@@ -186,16 +186,16 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
       let key = ''
 
       if (vista === 'diaria') {
-        key = fecha.toLocaleDateString('es-MX', {
+        key = fecha.toLocaleDateString('es-CO', {
           year: 'numeric',
           month: '2-digit',
           day: '2-digit'
         })
       } else if (vista === 'semanal') {
         const weekNum = Math.ceil((fecha.getDate()) / 7)
-        key = `${fecha.toLocaleDateString('es-MX', { month: 'long', year: 'numeric' })} - Semana ${weekNum}`
+        key = `${fecha.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' })} - Semana ${weekNum}`
       } else {
-        key = fecha.toLocaleDateString('es-MX', { month: 'long', year: 'numeric' })
+        key = fecha.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' })
       }
 
       if (!grupos[key]) grupos[key] = []
@@ -344,14 +344,14 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
         <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-4 sm:p-6 rounded-xl border-2 border-green-200 dark:border-green-800">
           <div className="text-[11px] sm:text-sm text-green-700 dark:text-green-300 mb-0.5 sm:mb-1">Total Ingresos</div>
           <div className="text-lg sm:text-2xl font-bold text-green-900 dark:text-green-100">
-            ${totales.ingresos.toLocaleString('es-MX', { maximumFractionDigits: 0 })}
+            ${totales.ingresos.toLocaleString('es-CO', { maximumFractionDigits: 0 })}
           </div>
         </div>
 
         <div className="bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 p-4 sm:p-6 rounded-xl border-2 border-red-200 dark:border-red-800">
           <div className="text-[11px] sm:text-sm text-red-700 dark:text-red-300 mb-0.5 sm:mb-1">Total Gastos</div>
           <div className="text-lg sm:text-2xl font-bold text-red-900 dark:text-red-100">
-            ${totales.gastos.toLocaleString('es-MX', { maximumFractionDigits: 0 })}
+            ${totales.gastos.toLocaleString('es-CO', { maximumFractionDigits: 0 })}
           </div>
         </div>
 
@@ -363,7 +363,7 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
             Balance Neto
           </div>
           <div className={`text-xl sm:text-2xl font-bold ${balance >= 0 ? 'text-blue-900 dark:text-blue-100' : 'text-orange-900 dark:text-orange-100'}`}>
-            ${balance.toLocaleString('es-MX', { maximumFractionDigits: 0 })}
+            ${balance.toLocaleString('es-CO', { maximumFractionDigits: 0 })}
           </div>
         </div>
       </div>
@@ -392,7 +392,7 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
               <div className="flex justify-between items-center">
                 <h4 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 to-cyan-700 dark:from-emerald-400 dark:to-cyan-400">{periodo}</h4>
                 <span className={`font-bold ${totalPeriodo >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
-                  ${totalPeriodo.toLocaleString('es-MX', { maximumFractionDigits: 0 })}
+                  ${totalPeriodo.toLocaleString('es-CO', { maximumFractionDigits: 0 })}
                 </span>
               </div>
             </div>
@@ -471,7 +471,7 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
                       : 'bg-rose-500/5 dark:bg-rose-500/10 hover:bg-rose-500/10 dark:hover:bg-rose-500/20'
                       } ${confirmDeleteId === tx.id ? 'opacity-80 scale-[0.99]' : ''}`}>
                       <td className="px-3 py-3 whitespace-nowrap text-[13px] text-gray-700 dark:text-gray-300">
-                        {new Date(tx.fecha).toLocaleString('es-MX', {
+                        {new Date(tx.fecha).toLocaleString('es-CO', {
                           day: '2-digit',
                           month: '2-digit',
                           year: '2-digit',
@@ -493,7 +493,7 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
                         ? 'text-green-600 dark:text-green-400'
                         : 'text-red-600 dark:text-red-400'
                         }`}>
-                        {tx.tipo === 'ingreso' ? '+' : '-'}${tx.monto.toLocaleString('es-MX', { maximumFractionDigits: 0 })}
+                        {tx.tipo === 'ingreso' ? '+' : '-'}${tx.monto.toLocaleString('es-CO', { maximumFractionDigits: 0 })}
                       </td>
                       <td className="px-3 py-3 text-[13px] text-gray-700 dark:text-gray-300">
                         {tx.categoria}

@@ -254,7 +254,7 @@ export default function ReportMVPPage() {
                   </div>
                   <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
                     Cuando registras un gasto con foto, el sistema compara el monto que declaraste con el del ticket.
-                    Si hay diferencia mayor a $50 MXN, te pregunta cuál es el correcto antes de registrar.
+                    Si hay diferencia mayor a $50 COP, te pregunta cuál es el correcto antes de registrar.
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <span className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm px-3 py-1 rounded">

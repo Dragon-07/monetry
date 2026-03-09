@@ -49,7 +49,7 @@ export function KPICard({ title, value, icon, color }: KPICardProps) {
         </div>
       </div>
       <div className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white">
-        {icon === 'transactions' ? value : `$${value.toLocaleString('es-MX', { maximumFractionDigits: 0 })}`}
+        {icon === 'transactions' ? value : `$${value.toLocaleString('es-CO', { maximumFractionDigits: 0 })}`}
       </div>
       <div className={`absolute -right-6 -bottom-6 w-24 h-24 ${config.bgBlur} rounded-full blur-2xl`}></div>
     </div>

@@ -91,8 +91,8 @@ export function ComparativasCategorias({ transacciones }: { transacciones: Trans
         }
 
         const opciones: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' }
-        const fmtIn = inicio.toLocaleDateString('es-MX', opciones)
-        const fmtFin = fin.toLocaleDateString('es-MX', opciones)
+        const fmtIn = inicio.toLocaleDateString('es-CO', opciones)
+        const fmtFin = fin.toLocaleDateString('es-CO', opciones)
 
         return `Del ${fmtIn} al ${fmtFin}`
     }, [rango, fechaInicio, fechaFin, transaccionesFiltradas])
@@ -130,7 +130,7 @@ export function ComparativasCategorias({ transacciones }: { transacciones: Trans
     }, [transaccionesFiltradas])
 
     const formatCurrency = (val: number) => {
-        return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(val)
+        return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(val)
     }
 
     const crearConfigGrafico = (ingreso: number, gasto: number) => {

@@ -87,7 +87,7 @@ export function DesgloseCategorias({ transacciones }: { transacciones: Transacci
                             label += ': ';
                         }
                         if (context.parsed !== null) {
-                            label += new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(context.parsed);
+                            label += new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(context.parsed);
                         }
                         return label;
                     }
@@ -126,7 +126,7 @@ export function DesgloseCategorias({ transacciones }: { transacciones: Transacci
                                         </div>
                                     </div>
                                     <span className="text-sm font-bold text-gray-800 dark:text-gray-100 ml-2 whitespace-nowrap">
-                                        {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(item.monto)}
+                                        {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(item.monto)}
                                     </span>
                                 </div>
                             ))}
