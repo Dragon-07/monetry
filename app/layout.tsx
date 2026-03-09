@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
+import { InstallPWA } from "@/components/InstallPWA";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +15,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 export const metadata: Metadata = {
-  title: "Monetry - Finanzas Inteligentes",
-  description: "Sistema de gestión financiera personal impulsado por IA",
+  title: "Monetry - Control Financiero",
+  description: "Gestión inteligente de finanzas personales con estilo premium.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Monetry",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport = {
+  themeColor: "#10b981",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -41,6 +58,7 @@ export default function RootLayout({
           <div className="bg-gradient-abstract min-h-screen transition-colors text-gray-800 dark:text-gray-100 font-sans">
             <Header />
             {children}
+            <InstallPWA />
           </div>
         </ThemeProvider>
       </body>

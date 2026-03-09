@@ -92,3 +92,35 @@ body {
 .dark .bg-gradient-abstract {
   background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
 }
+
+/* PWA & Mobile Optimizations */
+@layer base {
+  input, select, textarea {
+    font-size: 16px !important; /* Evita zoom automático en iOS */
+  }
+}
+
+html {
+  touch-action: manipulation; /* Elimina el retraso de 300ms al tocar */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Touch-friendly areas */
+button, a {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .glass-panel {
+    padding: 1rem;
+  }
+  
+  header {
+    margin: 0.5rem;
+    padding: 0.75rem;
+  }
+}
