@@ -39,7 +39,7 @@ export function Header() {
   ]
 
   return (
-    <header className="glass-panel sticky top-0 z-50 px-6 py-4 mx-4 mt-4 mb-8 rounded-xl flex justify-between items-center">
+    <header className="glass-panel sticky top-0 z-50 px-3 sm:px-6 py-3 sm:py-4 mx-2 sm:mx-4 mt-2 sm:mt-4 mb-4 sm:mb-8 rounded-xl flex justify-between items-center">
       <div className="flex w-full items-center justify-between">
         {/* Logo/Title */}
         <Link href="/" className="flex items-center space-x-2">
@@ -51,7 +51,7 @@ export function Header() {
             className="w-10 h-10 object-contain"
             priority
           />
-          <span className="font-bold text-xl tracking-tight text-gray-900 dark:text-white">
+          <span className="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-tight text-gray-900 dark:text-white">
             Monetry
           </span>
         </Link>
@@ -77,7 +77,7 @@ export function Header() {
         </nav>
 
         {/* Mobile Navigation */}
-        <nav className="md:hidden flex gap-1">
+        <nav className="md:hidden flex gap-0.5 sm:gap-1">
           {navItems.map(({ href, icon: Icon }) => {
             const isActive = pathname === href
             return (
@@ -96,7 +96,7 @@ export function Header() {
         </nav>
 
         {/* Right side: user info + theme + logout */}
-        <div className="flex items-center gap-2 ml-2">
+        <div className="flex items-center gap-1 sm:gap-2 ml-1 sm:ml-2">
           {/* Usuario activo */}
           {userEmail && (
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
