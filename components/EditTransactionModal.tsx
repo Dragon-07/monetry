@@ -1,7 +1,18 @@
 'use client'
 
-import { useState } from 'react'
-import { X, Check } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { X, Check, Settings2, Loader2 } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { ModalCategorias } from './categorias/ModalCategorias'
+
+const CATEGORIAS_GASTOS_DEFAULT = [
+    'Trabajo', 'Programación', 'Transporte', 'Alimentos',
+    'Entretenimiento', 'Educación', 'Otros gastos'
+]
+
+const CATEGORIAS_INGRESOS_DEFAULT = [
+    'Trabajo', 'Programación', 'ventas', 'Salario', 'Otros ingresos'
+]
 
 interface Transaccion {
     id: string
@@ -22,6 +33,11 @@ interface EditTransactionModalProps {
 export function EditTransactionModal({ transaction, onClose, onSuccess }: EditTransactionModalProps) {
     const [loading, setLoading] = useState(false)
     const [errorLocal, setErrorLocal] = useState('')
+    const [userId, setUserId] = useState<string | null>(null)
+
+    const [categorias, setCategorias] = useState<{ id: string, nombre: string, tipo: string }[]>([])
+    const [fetchingCategorias, setFetchingCategorias] = useState(false)
+    const [openCategorias, setOpenCategorias] = useState(false)
 
     // Utilizar el formato adecuado para inputs de fecha-hora ("YYYY-MM-DDThh:mm")
     const formatDateForInput = (dateString: string) => {
@@ -43,6 +59,49 @@ export function EditTransactionModal({ transaction, onClose, onSuccess }: EditTr
         descripcion: transaction.descripcion || '',
         metodo_pago: transaction.metodo_pago || ''
     })
+
+    const fetchCategorias = useCallback(async (uid: string, tipoForm: string) => {
+        setFetchingCategorias(true)
+        const { data, error } = await supabase
+            .from('categorias')
+            .select('id, nombre, tipo')
+            .eq('usuario_id', uid)
+            .eq('tipo', tipoForm)
+            .order('orden', { ascending: true })
+
+        if (error) {
+            console.error('Error fetching categories:', error)
+        } else if (data && data.length > 0) {
+            setCategorias(data)
+        } else {
+            // Seeding
+            const defaults = tipoForm === 'gasto' ? CATEGORIAS_GASTOS_DEFAULT : CATEGORIAS_INGRESOS_DEFAULT
+            const toInsert = defaults.map((nombre, index) => ({
+                nombre,
+                tipo: tipoForm,
+                usuario_id: uid,
+                orden: index
+            }))
+
+            const { data: inserted, error: insertError } = await supabase
+                .from('categorias')
+                .insert(toInsert)
+                .select()
+
+            if (!insertError && inserted) {
+                setCategorias(inserted)
+            }
+        }
+        setFetchingCategorias(false)
+    }, [])
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            const uid = session?.user?.id ?? null
+            setUserId(uid)
+            if (uid) fetchCategorias(uid, formData.tipo)
+        })
+    }, [formData.tipo, fetchCategorias])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
@@ -92,6 +151,14 @@ export function EditTransactionModal({ transaction, onClose, onSuccess }: EditTr
                 onClick={onClose}
             ></div>
 
+            {/* Modal de Categorías */}
+            <ModalCategorias
+                tipo={formData.tipo as 'gasto' | 'ingreso'}
+                open={openCategorias}
+                onClose={() => setOpenCategorias(false)}
+                onUpdate={() => userId && fetchCategorias(userId, formData.tipo)}
+            />
+
             {/* Modal Content */}
             <div className="relative w-full max-w-lg bg-[#ffffff] dark:bg-[#111827] border border-gray-200 dark:border-gray-700/50 shadow-2xl rounded-2xl overflow-hidden flex flex-col max-h-[90vh] z-50">
                 {/* Header */}
@@ -123,7 +190,11 @@ export function EditTransactionModal({ transaction, onClose, onSuccess }: EditTr
                                 <select
                                     name="tipo"
                                     value={formData.tipo}
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                        handleChange(e)
+                                        // Reset categoria when type changes
+                                        setFormData(prev => ({ ...prev, categoria: '' }))
+                                    }}
                                     required
                                     className="w-full p-3 bg-[#f8fafc] dark:bg-[#1f2937] border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 transition-all"
                                 >
@@ -161,28 +232,59 @@ export function EditTransactionModal({ transaction, onClose, onSuccess }: EditTr
 
                             {/* Categoría */}
                             <div className="space-y-1">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Categoría</label>
-                                <input
-                                    type="text"
-                                    name="categoria"
-                                    value={formData.categoria}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full p-3 bg-[#f8fafc] dark:bg-[#1f2937] border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-gray-100 transition-all"
-                                />
+                                <div className="flex justify-between items-center mb-1">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Categoría</label>
+                                    <button
+                                        type="button"
+                                        onClick={() => setOpenCategorias(true)}
+                                        className="text-[10px] flex items-center gap-0.5 text-emerald-500 hover:text-emerald-600 font-semibold"
+                                    >
+                                        <Settings2 className="w-2.5 h-2.5" />
+                                        Editar
+                                    </button>
+                                </div>
+                                <div className="relative">
+                                    <select
+                                        name="categoria"
+                                        value={formData.categoria}
+                                        onChange={handleChange}
+                                        required
+                                        disabled={fetchingCategorias}
+                                        className="w-full p-3 bg-[#f8fafc] dark:bg-[#1f2937] border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-gray-100 transition-all disabled:opacity-50"
+                                    >
+                                        {fetchingCategorias ? (
+                                            <option>Cargando...</option>
+                                        ) : (
+                                            <>
+                                                <option value="">Seleccionar...</option>
+                                                {categorias.map((cat) => (
+                                                    <option key={cat.id} value={cat.nombre}>{cat.nombre}</option>
+                                                ))}
+                                            </>
+                                        )}
+                                    </select>
+                                    {fetchingCategorias && (
+                                        <div className="absolute right-8 top-1/2 -translate-y-1/2">
+                                            <Loader2 className="w-4 h-4 animate-spin text-emerald-500" />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Método de Pago */}
                             <div className="space-y-1 sm:col-span-2">
                                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Método de Pago</label>
-                                <input
-                                    type="text"
+                                <select
                                     name="metodo_pago"
                                     value={formData.metodo_pago}
                                     onChange={handleChange}
                                     required
                                     className="w-full p-3 bg-[#f8fafc] dark:bg-[#1f2937] border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-gray-100 transition-all"
-                                />
+                                >
+                                    <option value="Efectivo">Efectivo</option>
+                                    <option value="Tarjeta">Tarjeta</option>
+                                    <option value="Transferencia">Transferencia</option>
+                                </select>
                             </div>
 
                             {/* Descripción */}

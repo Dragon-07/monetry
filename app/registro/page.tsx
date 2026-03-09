@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
+import { Loader2, CheckCircle2, XCircle, Settings2 } from 'lucide-react'
+import { ModalCategorias } from '@/components/categorias/ModalCategorias'
 
-const CATEGORIAS_GASTOS = [
+const CATEGORIAS_GASTOS_DEFAULT = [
   'Trabajo', 'Programación', 'Transporte', 'Alimentos',
   'Entretenimiento', 'Educación', 'Otros gastos'
 ]
 
-const CATEGORIAS_INGRESOS = [
+const CATEGORIAS_INGRESOS_DEFAULT = [
   'Trabajo', 'Programación', 'ventas', 'Salario', 'Otros ingresos'
 ]
 
@@ -21,19 +22,58 @@ export default function RegistroPage() {
   const [error, setError] = useState('')
   const [userId, setUserId] = useState<string | null>(null)
 
+  const [categorias, setCategorias] = useState<{ id: string, nombre: string, tipo: string }[]>([])
+  const [fetchingCategorias, setFetchingCategorias] = useState(false)
+  const [openCategorias, setOpenCategorias] = useState(false)
+
   const [tipo, setTipo] = useState<'gasto' | 'ingreso'>('gasto')
   const [monto, setMonto] = useState('')
   const [categoria, setCategoria] = useState('')
   const [descripcion, setDescripcion] = useState('')
   const [metodo_pago, setMetodoPago] = useState('Efectivo')
 
+  const fetchCategorias = useCallback(async (uid: string) => {
+    setFetchingCategorias(true)
+    const { data, error } = await supabase
+      .from('categorias')
+      .select('id, nombre, tipo')
+      .eq('usuario_id', uid)
+      .eq('tipo', tipo)
+      .order('orden', { ascending: true })
+
+    if (error) {
+      console.error('Error fetching categories:', error)
+    } else if (data && data.length > 0) {
+      setCategorias(data)
+    } else {
+      // Seeding: Si no hay categorías, insertar las de por defecto
+      const defaults = tipo === 'gasto' ? CATEGORIAS_GASTOS_DEFAULT : CATEGORIAS_INGRESOS_DEFAULT
+      const toInsert = defaults.map((nombre, index) => ({
+        nombre,
+        tipo,
+        usuario_id: uid,
+        orden: index
+      }))
+
+      const { data: inserted, error: insertError } = await supabase
+        .from('categorias')
+        .insert(toInsert)
+        .select()
+
+      if (!insertError && inserted) {
+        setCategorias(inserted)
+      }
+    }
+    setFetchingCategorias(false)
+  }, [tipo])
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUserId(session?.user?.id ?? null)
+      const uid = session?.user?.id ?? null
+      setUserId(uid)
+      if (uid) fetchCategorias(uid)
     })
-  }, [])
-
-  const categoriasActuales = tipo === 'gasto' ? CATEGORIAS_GASTOS : CATEGORIAS_INGRESOS
+  }, [fetchCategorias])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -92,6 +132,13 @@ export default function RegistroPage() {
         Registrar Transacción
       </h2>
 
+      <ModalCategorias
+        tipo={tipo}
+        open={openCategorias}
+        onClose={() => setOpenCategorias(false)}
+        onUpdate={() => userId && fetchCategorias(userId)}
+      />
+
       <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-6">
         {/* Tipo de transacción */}
         <div>
@@ -148,23 +195,47 @@ export default function RegistroPage() {
 
         {/* Categoría */}
         <div>
-          <label htmlFor="categoria" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Categoría *
-          </label>
-          <select
-            id="categoria"
-            value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}
-            required
-            className="w-full p-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
-          >
-            <option value="">Seleccionar categoría...</option>
-            {categoriasActuales.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+          <div className="flex justify-between items-center mb-2">
+            <label htmlFor="categoria" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Categoría *
+            </label>
+            <button
+              type="button"
+              onClick={() => setOpenCategorias(true)}
+              className="text-xs flex items-center gap-1 text-emerald-500 hover:text-emerald-600 font-semibold"
+            >
+              <Settings2 className="w-3 h-3" />
+              Editar categorías
+            </button>
+          </div>
+          <div className="relative">
+            <select
+              id="categoria"
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
+              required
+              disabled={fetchingCategorias}
+              className="w-full p-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 disabled:opacity-50"
+            >
+              {fetchingCategorias ? (
+                <option>Cargando categorías...</option>
+              ) : (
+                <>
+                  <option value="">Seleccionar categoría...</option>
+                  {categorias.map((cat) => (
+                    <option key={cat.id} value={cat.nombre}>
+                      {cat.nombre}
+                    </option>
+                  ))}
+                </>
+              )}
+            </select>
+            {fetchingCategorias && (
+              <div className="absolute right-8 top-1/2 -translate-y-1/2">
+                <Loader2 className="w-4 h-4 animate-spin text-emerald-500" />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Descripción */}

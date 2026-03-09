@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { PlusCircle, Loader2, CheckCircle2, XCircle, X, Calendar } from 'lucide-react'
+import { PlusCircle, Loader2, CheckCircle2, XCircle, X, Calendar, Settings2 } from 'lucide-react'
+import { ModalCategorias } from '../categorias/ModalCategorias'
 
-const CATEGORIAS_GASTOS = [
+const CATEGORIAS_GASTOS_DEFAULT = [
     'Trabajo', 'Programación', 'Transporte', 'Alimentos',
     'Entretenimiento', 'Educación', 'Otros gastos'
 ]
 
-const CATEGORIAS_INGRESOS = [
+const CATEGORIAS_INGRESOS_DEFAULT = [
     'Trabajo', 'Programación', 'ventas', 'Salario', 'Otros ingresos'
 ]
 
@@ -21,10 +22,14 @@ interface Props {
 
 export function ModalRegistro({ onSuccess }: Props) {
     const [open, setOpen] = useState(false)
+    const [openCategorias, setOpenCategorias] = useState(false)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState('')
     const [userId, setUserId] = useState<string | null>(null)
+
+    const [categorias, setCategorias] = useState<{ id: string, nombre: string, tipo: string }[]>([])
+    const [fetchingCategorias, setFetchingCategorias] = useState(false)
 
     // 'gasto' o 'ingreso' — mismos valores que usa la tabla transacciones
     const [tipo, setTipo] = useState<'gasto' | 'ingreso'>('gasto')
@@ -34,13 +39,50 @@ export function ModalRegistro({ onSuccess }: Props) {
     const [metodo_pago, setMetodoPago] = useState('Efectivo')
     const [fecha, setFecha] = useState(() => new Date().toISOString().split('T')[0])
 
+    const fetchCategorias = useCallback(async (uid: string) => {
+        setFetchingCategorias(true)
+        const { data, error } = await supabase
+            .from('categorias')
+            .select('id, nombre, tipo')
+            .eq('usuario_id', uid)
+            .eq('tipo', tipo)
+            .order('orden', { ascending: true })
+
+        if (error) {
+            console.error('Error fetching categories:', error)
+        } else if (data && data.length > 0) {
+            setCategorias(data)
+        } else {
+            // Seeding: Si no hay categorías, insertar las de por defecto
+            const defaults = tipo === 'gasto' ? CATEGORIAS_GASTOS_DEFAULT : CATEGORIAS_INGRESOS_DEFAULT
+            const toInsert = defaults.map((nombre, index) => ({
+                nombre,
+                tipo,
+                usuario_id: uid,
+                orden: index
+            }))
+
+            const { data: inserted, error: insertError } = await supabase
+                .from('categorias')
+                .insert(toInsert)
+                .select()
+
+            if (!insertError && inserted) {
+                setCategorias(inserted)
+            }
+        }
+        setFetchingCategorias(false)
+    }, [tipo])
+
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
-            setUserId(session?.user?.id ?? null)
+            const uid = session?.user?.id ?? null
+            setUserId(uid)
+            if (uid && open) {
+                fetchCategorias(uid)
+            }
         })
-    }, [])
-
-    const categoriasActuales = tipo === 'gasto' ? CATEGORIAS_GASTOS : CATEGORIAS_INGRESOS
+    }, [open, fetchCategorias])
 
     const resetForm = () => {
         setMonto('')
@@ -72,14 +114,13 @@ export function ModalRegistro({ onSuccess }: Props) {
                 throw new Error('Debes seleccionar una categoría')
             }
 
-            // Guardar el monto SIEMPRE POSITIVO — la tabla guarda positivo y usa 'tipo' para discriminar
             const fechaFinal = new Date(`${fecha}T12:00:00`).toISOString()
 
             const { error: insertError } = await supabase
                 .from('transacciones')
                 .insert({
-                    tipo,                         // 'gasto' | 'ingreso'
-                    monto: montoNum,              // POSITIVO siempre
+                    tipo,
+                    monto: montoNum,
                     categoria,
                     concepto: descripcion || `${tipo === 'gasto' ? 'Gasto' : 'Ingreso'} - ${categoria}`,
                     descripcion: descripcion || null,
@@ -114,6 +155,14 @@ export function ModalRegistro({ onSuccess }: Props) {
                 <PlusCircle className="w-4 h-4" />
                 Nueva Transacción
             </button>
+
+            {/* Modal de Categorías */}
+            <ModalCategorias
+                tipo={tipo}
+                open={openCategorias}
+                onClose={() => setOpenCategorias(false)}
+                onUpdate={() => userId && fetchCategorias(userId)}
+            />
 
             {/* Overlay */}
             {open && (
@@ -182,20 +231,44 @@ export function ModalRegistro({ onSuccess }: Props) {
 
                             {/* Categoría */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    Categoría *
-                                </label>
-                                <select
-                                    value={categoria}
-                                    onChange={(e) => setCategoria(e.target.value)}
-                                    required
-                                    className="w-full p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
-                                >
-                                    <option value="">Seleccionar categoría...</option>
-                                    {categoriasActuales.map((cat) => (
-                                        <option key={cat} value={cat}>{cat}</option>
-                                    ))}
-                                </select>
+                                <div className="flex justify-between items-center mb-1.5">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Categoría *
+                                    </label>
+                                    <button
+                                        type="button"
+                                        onClick={() => setOpenCategorias(true)}
+                                        className="text-xs flex items-center gap-1 text-emerald-500 hover:text-emerald-600 font-semibold"
+                                    >
+                                        <Settings2 className="w-3 h-3" />
+                                        Editar categorías
+                                    </button>
+                                </div>
+                                <div className="relative">
+                                    <select
+                                        value={categoria}
+                                        onChange={(e) => setCategoria(e.target.value)}
+                                        required
+                                        disabled={fetchingCategorias}
+                                        className="w-full p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all disabled:opacity-50"
+                                    >
+                                        {fetchingCategorias ? (
+                                            <option>Cargando categorías...</option>
+                                        ) : (
+                                            <>
+                                                <option value="">Seleccionar categoría...</option>
+                                                {categorias.map((cat) => (
+                                                    <option key={cat.id} value={cat.nombre}>{cat.nombre}</option>
+                                                ))}
+                                            </>
+                                        )}
+                                    </select>
+                                    {fetchingCategorias && (
+                                        <div className="absolute right-8 top-1/2 -translate-y-1/2">
+                                            <Loader2 className="w-4 h-4 animate-spin text-emerald-500" />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Descripción */}
