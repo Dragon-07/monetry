@@ -21,17 +21,38 @@ function LoginForm() {
     setLoading(true)
     setError('')
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    console.log('Intentando iniciar sesión para:', email)
 
-    if (error) {
-      setError('Correo o contraseña incorrectos')
+    try {
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
+
+      if (authError) {
+        console.error('Error de Supabase Auth:', authError)
+        setError(authError.message === 'Invalid login credentials'
+          ? 'Correo o contraseña incorrectos'
+          : authError.message)
+        setLoading(false)
+        return
+      }
+
+      if (data?.user) {
+        console.log('Inicio de sesión exitoso, redirigiendo...')
+        const redirectTo = searchParams.get('redirectTo') || '/'
+        router.push(redirectTo)
+        router.refresh()
+      } else {
+        console.warn('No se devolvió usuario ni error. Estado inesperado.')
+        setError('Error inesperado al iniciar sesión. Inténtalo de nuevo.')
+        setLoading(false)
+      }
+    } catch (err) {
+      console.error('Excepción capturada en handleSubmit:', err)
+      setError('Error de conexión o fallo interno. Verifica tu internet.')
       setLoading(false)
-      return
     }
-
-    const redirectTo = searchParams.get('redirectTo') || '/'
-    router.push(redirectTo)
-    router.refresh()
   }
 
   return (
