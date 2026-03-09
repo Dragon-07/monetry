@@ -203,7 +203,7 @@ export function FlujoEfectivo({ transacciones }: { transacciones: Transaccion[] 
 
             {/* KPIs */}
             {kpis && (
-                <div className="grid grid-cols-3 gap-3 mb-5">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
                     {/* Mejor mes */}
                     <div className="rounded-xl p-3 bg-white/30 dark:bg-white/5 backdrop-blur-sm border border-white/20 dark:border-white/10">
                         <p className="text-[11px] font-black text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1.5">
