@@ -30,7 +30,7 @@ export function ModalRegistro({ onSuccess }: Props) {
     const [tipo, setTipo] = useState<'gasto' | 'ingreso'>('gasto')
     const [monto, setMonto] = useState('')
     const [categoria, setCategoria] = useState('')
-    const [concepto, setConcepto] = useState('')
+    const [descripcion, setDescripcion] = useState('')
     const [metodo_pago, setMetodoPago] = useState('Efectivo')
     const [fecha, setFecha] = useState(() => new Date().toISOString().split('T')[0])
 
@@ -45,7 +45,7 @@ export function ModalRegistro({ onSuccess }: Props) {
     const resetForm = () => {
         setMonto('')
         setCategoria('')
-        setConcepto('')
+        setDescripcion('')
         setMetodoPago('Efectivo')
         setFecha(new Date().toISOString().split('T')[0])
         setError('')
@@ -81,7 +81,8 @@ export function ModalRegistro({ onSuccess }: Props) {
                     tipo,                         // 'gasto' | 'ingreso'
                     monto: montoNum,              // POSITIVO siempre
                     categoria,
-                    concepto: concepto || `${tipo === 'gasto' ? 'Gasto' : 'Ingreso'} - ${categoria}`,
+                    concepto: descripcion || `${tipo === 'gasto' ? 'Gasto' : 'Ingreso'} - ${categoria}`,
+                    descripcion: descripcion || null,
                     metodo_pago,
                     fecha: fechaFinal,
                     usuario_id: userId,
@@ -197,15 +198,15 @@ export function ModalRegistro({ onSuccess }: Props) {
                                 </select>
                             </div>
 
-                            {/* Concepto */}
+                            {/* Descripción */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    Concepto (opcional)
+                                    Descripción (opcional)
                                 </label>
                                 <input
                                     type="text"
-                                    value={concepto}
-                                    onChange={(e) => setConcepto(e.target.value)}
+                                    value={descripcion}
+                                    onChange={(e) => setDescripcion(e.target.value)}
                                     placeholder="Ej: Súper del fin de semana"
                                     className="w-full p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
                                 />
