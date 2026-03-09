@@ -203,8 +203,7 @@ User Action → Frontend Component → API Route → Supabase → Response
 ### Step 1: Clone Repository
 
 ```bash
-##git clone https://github.com/danielcarreon/sistema-financiero-app.git
-##cd sistema-financiero-app
+
 ```
 
 ### Step 2: Install Dependencies
