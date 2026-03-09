@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Upload, Loader2, CheckCircle2, XCircle } from 'lucide-react'
+import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
 
 const CATEGORIAS_GASTOS = [
   'Trabajo', 'Programación', 'Transporte', 'Alimentos',
@@ -26,8 +26,6 @@ export default function RegistroPage() {
   const [categoria, setCategoria] = useState('')
   const [descripcion, setDescripcion] = useState('')
   const [metodo_pago, setMetodoPago] = useState('Efectivo')
-  const [foto, setFoto] = useState<File | null>(null)
-  const [fotoPreview, setFotoPreview] = useState<string | null>(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -36,18 +34,6 @@ export default function RegistroPage() {
   }, [])
 
   const categoriasActuales = tipo === 'gasto' ? CATEGORIAS_GASTOS : CATEGORIAS_INGRESOS
-
-  const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setFoto(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setFotoPreview(reader.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -64,25 +50,6 @@ export default function RegistroPage() {
         throw new Error('Debe seleccionar una categoría')
       }
 
-      let foto_url = null
-
-      // Subir foto a Supabase Storage si existe
-      if (foto) {
-        const fileName = `${Date.now()}-${foto.name}`
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('facturas')
-          .upload(fileName, foto)
-
-        if (uploadError) throw uploadError
-
-        // Obtener URL pública
-        const { data: { publicUrl } } = supabase.storage
-          .from('facturas')
-          .getPublicUrl(fileName)
-
-        foto_url = publicUrl
-      }
-
       // Insertar transacción en BD
       if (!userId) {
         throw new Error('Debes estar autenticado para registrar transacciones.')
@@ -97,7 +64,6 @@ export default function RegistroPage() {
           concepto: descripcion || `${tipo === 'gasto' ? 'Gasto' : 'Ingreso'} - ${categoria}`,
           descripcion: descripcion || null,
           metodo_pago,
-          foto_url,
           fecha: new Date().toISOString(),
           usuario_id: userId,
         })
@@ -110,8 +76,6 @@ export default function RegistroPage() {
       setMonto('')
       setCategoria('')
       setDescripcion('')
-      setFoto(null)
-      setFotoPreview(null)
 
       // Reset success después de 3 segundos
       setTimeout(() => setSuccess(false), 3000)
@@ -238,36 +202,6 @@ export default function RegistroPage() {
               </button>
             ))}
           </div>
-        </div>
-
-
-
-        {/* Upload foto */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Foto del Ticket/Factura (opcional)
-          </label>
-          <div className="flex items-center gap-4">
-            <label className="flex-1 cursor-pointer">
-              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-emerald-500 transition-colors">
-                <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {foto ? foto.name : 'Click para subir imagen'}
-                </span>
-              </div>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFotoChange}
-                className="hidden"
-              />
-            </label>
-          </div>
-          {fotoPreview && (
-            <div className="mt-4">
-              <img src={fotoPreview} alt="Preview" className="max-w-xs rounded-lg shadow-md" />
-            </div>
-          )}
         </div>
 
         {/* Success/Error messages */}
