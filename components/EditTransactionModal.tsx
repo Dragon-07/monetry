@@ -73,7 +73,7 @@ export function EditTransactionModal({ transaction, onClose, onSuccess }: EditTr
             console.error('Error fetching categories:', error)
         } else if (data && data.length > 0) {
             setCategorias(data)
-        } else {
+        } else if (uid) {
             // Seeding
             const defaults = tipoForm === 'gasto' ? CATEGORIAS_GASTOS_DEFAULT : CATEGORIAS_INGRESOS_DEFAULT
             const toInsert = defaults.map((nombre, index) => ({
@@ -83,13 +83,21 @@ export function EditTransactionModal({ transaction, onClose, onSuccess }: EditTr
                 orden: index
             }))
 
-            const { data: inserted, error: insertError } = await supabase
+            // Usamos upsert con onConflict para evitar errores si otro componente ya las creó
+            const { error: insertError } = await supabase
                 .from('categorias')
-                .insert(toInsert)
-                .select()
+                .upsert(toInsert, { onConflict: 'usuario_id, nombre, tipo' })
 
-            if (!insertError && inserted) {
-                setCategorias(inserted)
+            // Después del upsert, volvemos a intentar el fetch para obtener los IDs reales
+            const { data: finalData, error: finalError } = await supabase
+                .from('categorias')
+                .select('id, nombre, tipo')
+                .eq('usuario_id', uid)
+                .eq('tipo', tipoForm)
+                .order('orden', { ascending: true })
+
+            if (!finalError && finalData) {
+                setCategorias(finalData)
             }
         }
         setFetchingCategorias(false)

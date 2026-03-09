@@ -62,13 +62,21 @@ export function ModalRegistro({ onSuccess }: Props) {
                 orden: index
             }))
 
-            const { data: inserted, error: insertError } = await supabase
+            // Usamos upsert con onConflict para evitar errores si otro componente ya las creó
+            const { error: insertError } = await supabase
                 .from('categorias')
-                .insert(toInsert)
-                .select()
+                .upsert(toInsert, { onConflict: 'usuario_id, nombre, tipo' })
 
-            if (!insertError && inserted) {
-                setCategorias(inserted)
+            // Después del upsert, volvemos a intentar el fetch para obtener los IDs reales
+            const { data: finalData, error: finalError } = await supabase
+                .from('categorias')
+                .select('id, nombre, tipo')
+                .eq('usuario_id', uid)
+                .eq('tipo', tipo)
+                .order('orden', { ascending: true })
+
+            if (!finalError && finalData) {
+                setCategorias(finalData)
             }
         }
         setFetchingCategorias(false)
