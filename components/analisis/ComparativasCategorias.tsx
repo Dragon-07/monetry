@@ -200,7 +200,7 @@ export function ComparativasCategorias({ transacciones }: { transacciones: Trans
                     </p>
                 </div>
 
-                <div className="bg-gray-100/80 dark:bg-gray-800/80 p-1 rounded-xl flex overflow-x-auto no-scrollbar gap-1">
+                <div className="bg-gray-100/80 dark:bg-gray-800/80 p-1 rounded-xl flex overflow-x-auto no-scrollbar gap-1 sm:gap-2">
                     {[
                         { id: 'Diaria' as RangoTiempo, icon: Calendar, label: 'Diaria' },
                         { id: 'Semanal' as RangoTiempo, icon: AlignJustify, label: 'Semanal' },
@@ -217,7 +217,7 @@ export function ComparativasCategorias({ transacciones }: { transacciones: Trans
                                     setShowDatePicker(false)
                                 }
                             }}
-                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap justify-center flex-1 sm:flex-none flex-shrink-0 uppercase tracking-wide ${rango === id
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap justify-center flex-none uppercase tracking-wide ${rango === id
                                 ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
                                 : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                                 }`}

@@ -184,10 +184,10 @@ export default function HomePage() {
           <span className="text-xl">🗓️</span>
           <h2 className="font-semibold text-lg">Período de Análisis</h2>
         </div>
-        <div className="flex space-x-2 bg-white/20 dark:bg-black/20 p-1 rounded-xl flex-wrap">
+        <div className="flex gap-2 bg-white/20 dark:bg-black/20 p-1 rounded-xl flex-wrap">
           <button
             onClick={() => setVista('diaria')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${vista === 'diaria'
+            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${vista === 'diaria'
               ? 'glass-panel shadow-sm text-gray-900 dark:text-white'
               : 'hover:bg-white/30 dark:hover:bg-gray-700/30'
               }`}
@@ -196,7 +196,7 @@ export default function HomePage() {
           </button>
           <button
             onClick={() => setVista('semanal')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${vista === 'semanal'
+            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${vista === 'semanal'
               ? 'glass-panel shadow-sm text-gray-900 dark:text-white'
               : 'hover:bg-white/30 dark:hover:bg-gray-700/30'
               }`}
@@ -205,7 +205,7 @@ export default function HomePage() {
           </button>
           <button
             onClick={() => setVista('mensual')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${vista === 'mensual'
+            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${vista === 'mensual'
               ? 'glass-panel shadow-sm text-gray-900 dark:text-white'
               : 'hover:bg-white/30 dark:hover:bg-gray-700/30'
               }`}
@@ -214,7 +214,7 @@ export default function HomePage() {
           </button>
           <button
             onClick={() => setShowDatePicker(!showDatePicker)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${vista === 'personalizada'
+            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${vista === 'personalizada'
               ? 'glass-panel shadow-sm text-gray-900 dark:text-white'
               : 'hover:bg-white/30 dark:hover:bg-gray-700/30'
               }`}
