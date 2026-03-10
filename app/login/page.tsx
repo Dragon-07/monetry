@@ -41,8 +41,9 @@ function LoginForm() {
       if (data?.user) {
         console.log('Inicio de sesión exitoso, redirigiendo...')
         const redirectTo = searchParams.get('redirectTo') || '/'
-        router.push(redirectTo)
-        router.refresh()
+        // Usamos window.location.href en lugar de router.push para forzar una recarga completa
+        // y asegurar que el middleware reconozca las cookies de sesión inmediatamente.
+        window.location.href = redirectTo
       } else {
         console.warn('No se devolvió usuario ni error. Estado inesperado.')
         setError('Error inesperado al iniciar sesión. Inténtalo de nuevo.')
