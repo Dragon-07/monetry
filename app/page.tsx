@@ -184,39 +184,39 @@ export default function HomePage() {
           <span className="text-xl">🗓️</span>
           <h2 className="font-semibold text-lg">Período de Análisis</h2>
         </div>
-        <div className="flex gap-2 bg-white/20 dark:bg-black/20 p-1 rounded-xl flex-wrap">
+        <div className="grid grid-cols-2 sm:flex gap-2 bg-white/20 dark:bg-black/20 p-1 rounded-xl w-full sm:w-auto">
           <button
             onClick={() => setVista('diaria')}
-            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${vista === 'diaria'
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap justify-center flex items-center ${vista === 'diaria'
               ? 'glass-panel shadow-sm text-gray-900 dark:text-white'
-              : 'hover:bg-white/30 dark:hover:bg-gray-700/30'
+              : 'hover:bg-white/30 dark:hover:bg-gray-700/30 text-gray-600 dark:text-gray-300'
               }`}
           >
             <span className="material-icons text-[16px] align-middle mr-1">today</span> Diaria
           </button>
           <button
             onClick={() => setVista('semanal')}
-            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${vista === 'semanal'
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap justify-center flex items-center ${vista === 'semanal'
               ? 'glass-panel shadow-sm text-gray-900 dark:text-white'
-              : 'hover:bg-white/30 dark:hover:bg-gray-700/30'
+              : 'hover:bg-white/30 dark:hover:bg-gray-700/30 text-gray-600 dark:text-gray-300'
               }`}
           >
             <span className="material-icons text-[16px] align-middle mr-1">view_week</span> Semanal
           </button>
           <button
             onClick={() => setVista('mensual')}
-            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${vista === 'mensual'
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap justify-center flex items-center ${vista === 'mensual'
               ? 'glass-panel shadow-sm text-gray-900 dark:text-white'
-              : 'hover:bg-white/30 dark:hover:bg-gray-700/30'
+              : 'hover:bg-white/30 dark:hover:bg-gray-700/30 text-gray-600 dark:text-gray-300'
               }`}
           >
             <span className="material-icons text-[16px] align-middle mr-1">calendar_month</span> Mensual
           </button>
           <button
             onClick={() => setShowDatePicker(!showDatePicker)}
-            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${vista === 'personalizada'
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap justify-center flex items-center ${vista === 'personalizada'
               ? 'glass-panel shadow-sm text-gray-900 dark:text-white'
-              : 'hover:bg-white/30 dark:hover:bg-gray-700/30'
+              : 'hover:bg-white/30 dark:hover:bg-gray-700/30 text-gray-600 dark:text-gray-300'
               }`}
           >
             <span className="material-icons text-[16px] align-middle mr-1">tune</span> Personalizada
