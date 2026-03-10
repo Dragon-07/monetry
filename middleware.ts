@@ -12,11 +12,14 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next()
     }
 
-    // Permitir rutas de API y archivos estáticos
+    // Permitir rutas de API, archivos estáticos y archivos de PWA
     if (
         pathname.startsWith('/api/') ||
         pathname.startsWith('/_next/') ||
-        pathname.startsWith('/favicon.ico')
+        pathname.startsWith('/favicon.ico') ||
+        pathname.endsWith('.webmanifest') ||
+        pathname.endsWith('.js') || // Para sw.js y chunks de workbox
+        pathname.includes('workbox-')
     ) {
         return NextResponse.next()
     }
@@ -61,6 +64,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+        '/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|sw.js|workbox-.*\\.js|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 }

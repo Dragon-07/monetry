@@ -193,14 +193,14 @@ export function ComparativasCategorias({ transacciones }: { transacciones: Trans
         <div className="flex flex-col h-full gap-6">
             {/* Header y Toggle */}
             <div className="flex flex-col gap-4">
-                <div className="flex items-baseline gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
                     <h2 className="text-xl font-black text-gray-800 dark:text-gray-100 uppercase tracking-tight">Comparativas</h2>
-                    <p className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+                    <p className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase tracking-wider truncate">
                         {rangoTexto}
                     </p>
                 </div>
 
-                <div className="bg-gray-100/80 dark:bg-gray-800/80 p-1 rounded-xl flex overflow-x-auto no-scrollbar sm:flex-wrap gap-1">
+                <div className="bg-gray-100/80 dark:bg-gray-800/80 p-1 rounded-xl flex overflow-x-auto no-scrollbar gap-1">
                     {[
                         { id: 'Diaria' as RangoTiempo, icon: Calendar, label: 'Diaria' },
                         { id: 'Semanal' as RangoTiempo, icon: AlignJustify, label: 'Semanal' },
@@ -217,7 +217,7 @@ export function ComparativasCategorias({ transacciones }: { transacciones: Trans
                                     setShowDatePicker(false)
                                 }
                             }}
-                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap sm:flex-1 justify-center sm:flex-none uppercase tracking-wide ${rango === id
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap justify-center flex-1 sm:flex-none flex-shrink-0 uppercase tracking-wide ${rango === id
                                 ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
                                 : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                                 }`}
@@ -271,7 +271,7 @@ export function ComparativasCategorias({ transacciones }: { transacciones: Trans
             )}
 
             {/* Balances */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 xs:grid-cols-2 gap-4">
                 {/* Balance Trabajo */}
                 <div className="bg-white/60 dark:bg-gray-800/60 border border-emerald-200 dark:border-emerald-800/40 p-5 rounded-2xl flex flex-col justify-center text-center shadow-md backdrop-blur-md transition-all hover:shadow-lg">
                     <span className="text-base font-bold text-gray-700 dark:text-gray-200 mb-1.5 uppercase tracking-wide">Trabajo</span>
@@ -298,7 +298,7 @@ export function ComparativasCategorias({ transacciones }: { transacciones: Trans
             </div>
 
             {/* Gráficos de barras */}
-            <div className="grid grid-cols-2 gap-4 flex-1 mt-2 min-h-[220px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1 mt-2 min-h-[220px]">
                 {/* Trabajo Chart */}
                 <div className="relative w-full h-full flex flex-col">
                     <span className="text-sm font-black text-center text-gray-800 dark:text-gray-100 mb-3 border-b-2 border-emerald-500/30 pb-1">Trabajo</span>

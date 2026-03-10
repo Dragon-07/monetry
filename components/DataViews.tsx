@@ -549,29 +549,29 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
       })}
 
       {/* Controles de Paginación */}
-      <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+      <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-6 px-4 py-4 bg-gray-50/50 dark:bg-gray-800/50 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
         {/* Info de registros */}
-        <div className="text-sm text-gray-600 dark:text-gray-400">
+        <div className="text-sm text-gray-600 dark:text-gray-400 text-center sm:text-left font-medium">
           Mostrando{' '}
-          <span className="font-semibold text-gray-900 dark:text-white">
+          <span className="font-bold text-gray-900 dark:text-white">
             {transaccionesFiltradas.length === 0 ? 0 : indiceInicio + 1}
           </span>
           {' '}-{' '}
-          <span className="font-semibold text-gray-900 dark:text-white">
+          <span className="font-bold text-gray-900 dark:text-white">
             {Math.min(indiceFin, transaccionesFiltradas.length)}
           </span>
           {' '}de{' '}
-          <span className="font-semibold text-gray-900 dark:text-white">
+          <span className="font-bold text-gray-900 dark:text-white">
             {transaccionesFiltradas.length}
           </span>
           {' '}transacciones
         </div>
 
         {/* Controles de navegación */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col xs:flex-row items-center gap-4 w-full sm:w-auto">
           {/* Items por página */}
           <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-600 dark:text-gray-400">
+            <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
               Por página:
             </label>
             <select
@@ -580,7 +580,7 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
                 setItemsPorPagina(Number(e.target.value))
                 setPaginaActual(1)
               }}
-              className="px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
+              className="px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-bold text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all cursor-pointer shadow-sm"
             >
               <option value={20}>20</option>
               <option value={50}>50</option>
@@ -590,30 +590,24 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
           </div>
 
           {/* Botones de navegación */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full xs:w-auto justify-between xs:justify-start border-t xs:border-t-0 pt-4 xs:pt-0 border-gray-200 dark:border-gray-700/50">
             <button
               onClick={() => setPaginaActual(prev => Math.max(1, prev - 1))}
               disabled={paginaActual === 1}
-              className="px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="flex-1 xs:flex-none px-4 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95"
             >
               Anterior
             </button>
 
-            <span className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-400">
-              Página{' '}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {paginaActual}
-              </span>
-              {' '}de{' '}
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {totalPaginas || 1}
-              </span>
+            <span className="px-2 text-xs font-bold text-gray-600 dark:text-gray-400 whitespace-nowrap">
+              <span className="text-gray-900 dark:text-white">{paginaActual}</span>
+              {' '}/ <span className="text-gray-500">{totalPaginas || 1}</span>
             </span>
 
             <button
               onClick={() => setPaginaActual(prev => Math.min(totalPaginas, prev + 1))}
               disabled={paginaActual >= totalPaginas}
-              className="px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="flex-1 xs:flex-none px-4 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95"
             >
               Siguiente
             </button>
