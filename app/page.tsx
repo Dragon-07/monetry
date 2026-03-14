@@ -168,15 +168,25 @@ export default function HomePage() {
 
   return (
     <main className="max-w-7xl mx-auto p-6 space-y-6">
-      <div className="py-4">
-        <h1 className="text-xl font-black uppercase tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-          Vista general de tus finanzas <span className="text-gray-400 dark:text-gray-500 font-medium text-base">· {getVistaLabel()}</span>
+      <div className="py-8 space-y-2">
+        <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-gray-900 dark:text-white leading-tight">
+          Vista general de <br className="hidden sm:block" />
+          <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 dark:from-blue-400 dark:via-indigo-400 dark:to-violet-400 bg-clip-text text-transparent italic">
+            tus finanzas
+          </span>
         </h1>
-        {rangoFechas.inicio && rangoFechas.fin && (
-          <p className="text-sm font-black text-emerald-600 dark:text-emerald-400 mt-1 flex items-center uppercase tracking-wide">
-            <span className="mr-2">�</span> Del {rangoFechas.inicio} al {rangoFechas.fin}
-          </p>
-        )}
+                <div className="flex flex-wrap items-center gap-3">
+          <div className="px-4 py-1.5 glass-panel rounded-full text-sm font-bold flex items-center shadow-lg border-white/50 dark:border-white/10 uppercase tracking-widest text-blue-600 dark:text-blue-400">
+            <span className="mr-2 text-base">📊</span> {getVistaLabel()}
+          </div>
+          
+          {rangoFechas.inicio && (
+            <div className="flex items-center text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse mr-2" />
+              Del {rangoFechas.inicio} al {rangoFechas.fin}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="glass-panel rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
