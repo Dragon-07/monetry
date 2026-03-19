@@ -169,9 +169,9 @@ export default function HomePage() {
   return (
     <main className="max-w-7xl mx-auto p-6 space-y-6">
       <div className="py-8 space-y-2">
-        <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-gray-900 dark:text-white leading-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-snug">
           Vista general de <br className="hidden sm:block" />
-          <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 dark:from-blue-400 dark:via-indigo-400 dark:to-violet-400 bg-clip-text text-transparent italic">
+          <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 dark:from-indigo-400 dark:via-purple-400 dark:to-blue-400 bg-clip-text text-transparent italic pb-1 drop-shadow-sm inline-block">
             tus finanzas
           </span>
         </h1>
