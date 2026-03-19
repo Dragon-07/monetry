@@ -34,12 +34,14 @@ export default function SignupPage() {
             return
         }
 
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
                 data: { nombre: nombre || email.split('@')[0] },
-                emailRedirectTo: `${window.location.origin}/auth/callback`,
+                emailRedirectTo: `${siteUrl}/auth/callback`,
             },
         })
 
