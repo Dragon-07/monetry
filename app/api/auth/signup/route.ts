@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase-server'
+import { getURL } from '@/lib/url'
 
 export async function POST(request: Request) {
     const { email, password, nombre } = await request.json()
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || request.headers.get('origin');
+    const baseUrl = getURL();
 
     const supabase = await createSupabaseServerClient()
     const { data, error } = await supabase.auth.signUp({

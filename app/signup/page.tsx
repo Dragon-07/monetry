@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { getURL } from '@/lib/url'
 
 export default function SignupPage() {
     const [nombre, setNombre] = useState('')
@@ -34,7 +35,7 @@ export default function SignupPage() {
             return
         }
 
-        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+        const siteUrl = getURL();
 
         const { data, error } = await supabase.auth.signUp({
             email,
