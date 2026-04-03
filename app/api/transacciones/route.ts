@@ -31,23 +31,27 @@ export async function GET(request: Request) {
       .gte('fecha', `${fechaInicio}T00:00:00`)
       .lte('fecha', `${fechaFin}T23:59:59`)
   } else if (vista === 'diaria') {
-    // Últimos 7 días
-    const sevenDaysAgo = new Date(now)
-    sevenDaysAgo.setDate(now.getDate() - 7)
-    query = query.gte('fecha', sevenDaysAgo.toISOString())
+    // Solo hoy (desde las 00:00:00 de hoy)
+    const inicioDia = new Date(now)
+    inicioDia.setHours(0, 0, 0, 0)
+    query = query
+      .gte('fecha', inicioDia.toISOString())
+      .lte('fecha', now.toISOString())
   } else if (vista === 'semanal') {
-    // Últimas 4 semanas
-    const fourWeeksAgo = new Date(now)
-    fourWeeksAgo.setDate(now.getDate() - 28)
-    query = query.gte('fecha', fourWeeksAgo.toISOString())
+    // Últimos 7 días
+    const haceUnaSeamana = new Date(now)
+    haceUnaSeamana.setDate(now.getDate() - 7)
+    haceUnaSeamana.setHours(0, 0, 0, 0)
+    query = query.gte('fecha', haceUnaSeamana.toISOString())
   } else {
-    // Últimos 12 meses
-    const twelveMonthsAgo = new Date(now)
-    twelveMonthsAgo.setMonth(now.getMonth() - 12)
-    query = query.gte('fecha', twelveMonthsAgo.toISOString())
+    // Vista mensual: Mostrar los últimos 12 meses para tener historial
+    const haceDoceMeses = new Date(now)
+    haceDoceMeses.setMonth(now.getMonth() - 12)
+    haceDoceMeses.setHours(0, 0, 0, 0)
+    query = query.gte('fecha', haceDoceMeses.toISOString())
   }
 
-  const { data, error } = await query.limit(500)
+  const { data, error } = await query.limit(1000)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })

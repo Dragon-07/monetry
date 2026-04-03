@@ -70,12 +70,13 @@ export default function HomePage() {
         startDate.setHours(0, 0, 0, 0)
         endDate.setHours(23, 59, 59, 999)
         break
-      case 'mensual':
-        startDate = new Date()
-        startDate.setDate(startDate.getDate() - 30)
-        startDate.setHours(0, 0, 0, 0)
-        endDate.setHours(23, 59, 59, 999)
+      case 'mensual': {
+        // Mes del calendario actual: del día 1 al último día del mes presente
+        const ahora = new Date()
+        startDate = new Date(ahora.getFullYear(), ahora.getMonth(), 1, 0, 0, 0, 0)
+        endDate = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0, 23, 59, 59, 999)
         break
+      }
       case 'personalizada':
         if (!fechaInicio || !fechaFin) {
           setLoading(false)
@@ -86,11 +87,12 @@ export default function HomePage() {
         endDate = new Date(fechaFin)
         endDate.setHours(23, 59, 59, 999)
         break
-      default:
-        startDate = new Date()
-        startDate.setDate(startDate.getDate() - 30)
-        startDate.setHours(0, 0, 0, 0)
-        endDate.setHours(23, 59, 59, 999)
+      default: {
+        // Por defecto: mes calendario actual
+        const ahora = new Date()
+        startDate = new Date(ahora.getFullYear(), ahora.getMonth(), 1, 0, 0, 0, 0)
+        endDate = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0, 23, 59, 59, 999)
+      }
     }
 
     // Guardar rango de fechas para mostrar
@@ -106,10 +108,7 @@ export default function HomePage() {
       .select('*')
       .not('concepto', 'like', 'RECURRENTE:%')
       .gte('fecha', startDate.toISOString())
-
-    if (vista === 'personalizada') {
-      query = query.lte('fecha', endDate.toISOString())
-    }
+      .lte('fecha', endDate.toISOString())
 
     const { data, error } = await query
 
@@ -151,12 +150,13 @@ export default function HomePage() {
   }
 
   const getVistaLabel = () => {
+    const ahora = new Date()
     switch (vista) {
       case 'diaria': return 'Hoy'
       case 'semanal': return 'Últimos 7 días'
-      case 'mensual': return 'Últimos 30 días'
+      case 'mensual': return ahora.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' })
       case 'personalizada': return `${fechaInicio} - ${fechaFin}`
-      default: return 'Últimos 30 días'
+      default: return ahora.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' })
     }
   }
 

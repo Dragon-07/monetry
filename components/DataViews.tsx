@@ -36,7 +36,7 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
 
   // Estados para filtros y sorting
   const [filtroTipo, setFiltroTipo] = useState<'todos' | 'gasto' | 'ingreso'>('todos')
-  const [ordenColumna, setOrdenColumna] = useState<string | null>(null)
+  const [ordenColumna, setOrdenColumna] = useState<string | null>('fecha')
   const [ordenDireccion, setOrdenDireccion] = useState<'asc' | 'desc'>('desc')
 
   // Estados para paginación
@@ -122,37 +122,45 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
   const transaccionesFiltradas = transacciones
     .filter(t => filtroTipo === 'todos' || t.tipo === filtroTipo)
     .sort((a, b) => {
-      if (!ordenColumna) return 0
-
       let valorA: any, valorB: any
+      const columnaActual = ordenColumna || 'fecha'
 
-      switch (ordenColumna) {
-        case 'fecha':
-          valorA = new Date(a.fecha).getTime()
-          valorB = new Date(b.fecha).getTime()
-          break
-        case 'tipo':
-          valorA = a.tipo
-          valorB = b.tipo
-          break
-        case 'categoria':
-          valorA = a.categoria
-          valorB = b.categoria
-          break
-        case 'monto':
-          valorA = a.monto
-          valorB = b.monto
-          break
-        case 'metodo':
-          valorA = a.metodo_pago
-          valorB = b.metodo_pago
-          break
-        default:
-          return 0
+      if (columnaActual === 'fecha') {
+        valorA = new Date(a.fecha).getTime()
+        valorB = new Date(b.fecha).getTime()
+      } else {
+        switch (columnaActual) {
+          case 'tipo':
+            valorA = a.tipo
+            valorB = b.tipo
+            break
+          case 'categoria':
+            valorA = a.categoria
+            valorB = b.categoria
+            break
+          case 'monto':
+            valorA = a.monto
+            valorB = b.monto
+            break
+          case 'metodo':
+            valorA = a.metodo_pago
+            valorB = b.metodo_pago
+            break
+          default:
+            valorA = new Date(a.fecha).getTime()
+            valorB = new Date(b.fecha).getTime()
+        }
       }
 
       if (valorA < valorB) return ordenDireccion === 'asc' ? -1 : 1
       if (valorA > valorB) return ordenDireccion === 'asc' ? 1 : -1
+      
+      // Fallback: si son iguales en el criterio actual, ordenar por fecha desc
+      if (columnaActual !== 'fecha') {
+        const d_a = new Date(a.fecha).getTime()
+        const d_b = new Date(b.fecha).getTime()
+        return d_b - d_a
+      }
       return 0
     })
 
@@ -202,7 +210,15 @@ export function DataViews({ vista: vistaProp, fechaInicio: fechaInicioProp, fech
       grupos[key].push(t)
     })
 
-    return Object.entries(grupos).sort((a, b) => b[0].localeCompare(a[0]))
+    // Ordenar de forma cronológica (más reciente arriba) usando la fecha más nueva de cada grupo
+    return Object.entries(grupos).sort((a, b) => {
+      const getNewestDate = (txs: Transaccion[]) => {
+        return Math.max(...txs.map(t => new Date(t.fecha).getTime()))
+      }
+      const timeA = getNewestDate(a[1])
+      const timeB = getNewestDate(b[1])
+      return timeB - timeA
+    })
   }
 
   const gruposData = agruparPorPeriodo()
